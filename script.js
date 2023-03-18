@@ -3,8 +3,6 @@ const Player = (name, symbol) => ({
   symbol,
 });
 
-const display = document.getElementById('display');
-
 const gameboard = (() => {
   const values = ['', '', '', '', '', '', '', '', ''];
   const render = () => {
@@ -19,37 +17,35 @@ const gameboard = (() => {
 })();
 
 const gameplay = (() => {
+  const display = document.getElementById('display');
   const p1 = Player(document.getElementById('player1').value, 'x');
   const p2 = Player(document.getElementById('player2').value, 'o');
   let currentPlayer = p1;
   function changePlayer() {
-    if (currentPlayer == p1) {
-      currentPlayer = p2;
-    } else if (currentPlayer == p2) {
-      currentPlayer = p1;
-    }
+    return (currentPlayer == p1 ? currentPlayer = p2 : currentPlayer = p1);
   }
   const checkWinner = () => {
-    if (((gameboard.values[0] == 'x') && (gameboard.values[1] == 'x') && (gameboard.values[2] == 'x'))
-            || ((gameboard.values[3] == 'x') && (gameboard.values[4] == 'x') && (gameboard.values[5] == 'x'))
-            || ((gameboard.values[6] == 'x') && (gameboard.values[7] == 'x') && (gameboard.values[8] == 'x'))
-            || ((gameboard.values[0] == 'x') && (gameboard.values[3] == 'x') && (gameboard.values[6] == 'x'))
-            || ((gameboard.values[1] == 'x') && (gameboard.values[4] == 'x') && (gameboard.values[7] == 'x'))
-            || ((gameboard.values[2] == 'x') && (gameboard.values[5] == 'x') && (gameboard.values[8] == 'x'))
-            || ((gameboard.values[0] == 'x') && (gameboard.values[4] == 'x') && (gameboard.values[8] == 'x'))
-            || ((gameboard.values[2] == 'x') && (gameboard.values[4] == 'x') && (gameboard.values[6] == 'x'))) {
-      display.innerHTML = `${p1.name} is the winner`;
-    } else if (((gameboard.values[0] == 'o') && (gameboard.values[1] == 'o') && (gameboard.values[2] == 'o'))
-    || ((gameboard.values[3] == 'o') && (gameboard.values[4] == 'o') && (gameboard.values[5] == 'o'))
-    || ((gameboard.values[6] == 'o') && (gameboard.values[7] == 'o') && (gameboard.values[8] == 'o'))
-    || ((gameboard.values[0] == 'o') && (gameboard.values[3] == 'o') && (gameboard.values[6] == 'o'))
-    || ((gameboard.values[1] == 'o') && (gameboard.values[4] == 'o') && (gameboard.values[7] == 'o'))
-    || ((gameboard.values[2] == 'o') && (gameboard.values[5] == 'o') && (gameboard.values[8] == 'o'))
-    || ((gameboard.values[0] == 'o') && (gameboard.values[4] == 'o') && (gameboard.values[8] == 'o'))
-    || ((gameboard.values[2] == 'o') && (gameboard.values[4] == 'o') && (gameboard.values[6] == 'o'))) {
-      display.innerHTML = `${p2.name} is the winner`;
-    } else if (gameboard.values.every((x) => x != '')) {
-      display.innerHTML = 'Draw!';
+    const combinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (const combination of combinations) {
+      if (gameboard.values[combination[0]] == gameboard.values[combination[1]]
+                && gameboard.values[combination[1]] == gameboard.values[combination[2]]
+                && gameboard.values[combination[0]] != '') {
+        function getPlayerName() {
+          return (gameboard.values[combination[0]] == p1.symbol ? p1.name : p2.name);
+        }
+        display.innerHTML = `${getPlayerName()} is the winner`;
+      } else if (gameboard.values.every((x) => x != '')) {
+        display.innerHTML = 'Draw!';
+      }
     }
   };
   for (let i = 0; i < gameboard.values.length; i++) {

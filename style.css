@@ -1,0 +1,12 @@
+#container {
+    display:grid;
+    grid-template-columns: repeat(3, 90px);
+    grid-template-rows: repeat(3, 90px);
+    margin-top:30px;
+}
+
+.square {
+    border: 1px solid black;
+    font-size: 4rem;
+    text-align: center;
+}
